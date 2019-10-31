@@ -1,0 +1,33 @@
+INDICACIONES DE COMO FUNCIONA EL SERVICIO DDNS:
+1) SE TIENE TANTO 1 SERVIDOR COMO 2 CLIENTES EN DIFERENTES SUBREDES.
+
+2) CONFIGURAMOS LAS 2 SUBREDES (INTERFACES) EN EL SERVIDOR DE MANERA ESTÁTICA.
+
+3) EN EL CASO DE LOS CLIENTES SOLO BASTARÍA CON ASIGNAR POR DHCP SU INTERFAZ.
+
+4) LUEGO VAMOS AL ARCHIVO /etc/dhcp/dhcpd.conf Y AÑADIMOS LAS 2 SUBREDES CON LAS QUE TRABAJAREMOS DE MANERA DINÁMICA
+4.1) añadiremos las siguientes líneas para indicar que se trabajará con el servicio ddns:
+option domain-name (nombre de dominio para cada subred) 
+option domain-name-servers (IP's del servidor para cada subred)
+option option-router (ip del router que vendría a ser el servidor para cada subred)
+ddns-domainname (tambien se establece el nombre de dominio, puede hacerse dentro o fuera de los parametros de la subred)
+ddns-updates on (activa las actualizaciones dinámicas)
+ddns-update-style interim (se indica el tipo de actualización dinámica)
+ignore-client updates
+y otras lineas de código para las zonas...
+
+5) AHORA MODIFICAMOS EL ARCHIVO /etc/bind/named.conf.local PARA ESTABLECER LAS ZONAS DIRECTAS E INVERSAS, EN ESTE CASO YO HE TRABAJADO CON LOS DOMINIOS "fc.uni.edu" Y "fic.uni.edu" CADA UNO CORRESPONDIENTE A UNA SUBRED COMO SE INDICÓ EN CLASES.
+
+6) EMPEZAMOS A TRABAJAR CON LAS ZONAS DIRECTAS E INVERSAS COPIANDO LOS ARCHIVOS BASES DE /etc/bind/db.local y /etc/bind/db.127. EN ESTE CASO NO SE AÑADIRÁN LAS IP's DE LOS CLIENTE PUESTO QUE SE TRABAJARÁN DE MANERA DINÁMICA.
+
+7) CONFIGURAMOS EL ARCHIVO resolv.conf EN EL SERVIDOR PARA QUE BUSQUE POR NOMBRE DE DOMINIO A SI MISMO PRIMERAMENTE, ESTO QUIERE DECIR AL LOCALHOST "nameserver 127.0.0.1", Y LUEGO LOS DNS PUBLICOS DE GOOGLE "nameserver 8.8.8.8"
+
+8) ACCEDEMOS A LOS CLIENTES Y VERIFICAMOS QUE EXISTA CONEXIÓN ENTRE ELLOS Y EL SERVIDOR.
+LOS CLIENTES HAN RECIBIDO UNA IP DE MANERA DINAMICA LA CUAL SE ESTABLECIO EN EL RANGO DEL SERVIDOR
+
+
+9) REINICIAMOS EL SERVICIO DNS Y DHCP Y VEMOS SI FUNCIONA CORRECTAMENTE EL SERVICIO DDNS.
+
+ESO SERÍA TODO, GRACIAS :D
+
+
